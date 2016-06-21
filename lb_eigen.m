@@ -26,131 +26,131 @@
 % % note that -1 *efunc is also an efunc
 % fprintf('Press Enter to continue...\n');
 % pause;
-
-%% Linear FEM on line
-% Exercise 2
-fprintf('Exercise 2\n');
-% create spiral
-phi = 0:0.2:4*pi; 
-vnum = length(phi); 
-x = phi.*cos(phi);
-y = phi.*sin(phi); 
-figure;
-plot(x,y,'b.-');
-% integrals of local form functions
-a = [1 -1; -1 1];
-b = [1/3 1/6; 1/6 1/3];
-fprintf('Press Enter to continue...\n');
-pause;
-
-% Exercise 3
-fprintf('Exercise 3\n');
-% allocate sparse (filled with zero) 
-A = spalloc(vnum,vnum,2*vnum); 
-B = spalloc(vnum,vnum,2*vnum); 
-for i = 2:vnum
-    % global index of first and second vertex of this edge:
-    i1 = i-1; 
-    i2 = i;
-    % length of segment
-    W = sqrt((x(i2)-x(i1))^2+(y(i2)-y(i1))^2);
-    % fill local stuff into global A matrix
-    A(i1,i1) = A(i1,i1)+a(1,1)/W;
-    A(i1,i2) = A(i1,i2)+a(1,2)/W;
-    % same as line before: symmetric
-    A(i2,i1) = A(i2,i1)+a(2,1)/W;
-    A(i2,i2) = A(i2,i2)+a(2,2)/W;
-    % or simply
-    % A([i1,i2],[i1,i2]) = A([i1,i2],[i1,i2]) + (1.0/W) * a;
-    B([i1,i2],[i1,i2]) = B([i1,i2],[i1,i2])+W*b;
-end
-fprintf('Press Enter to continue...\n');
-pause;
-
-% Exercise 4
-fprintf('Exercise 4\n');
-% compute efunc evals:
-opts.issym = 1;
-N = 3; % need the first 2 non zero 
-[evecsn, evalsn] = eigs(A,B,N,'SM',opts);
-% reverse order (smallest first)
-evalsn = diag(evalsn);
-evalsn = evalsn(end:-1:1)
-evecsn = evecsn(:,end:-1:1);
-% plot first non-zero efunc as color
-figure;
-surface([x(:) x(:)],[y(:) y(:)],[zeros(length(x),2)],[evecsn(:,2) evecsn(:,2)],...
-    'FaceColor','none','EdgeColor','flat','Marker','none','LineWidth',2);
-fprintf('Press Enter to continue...\n');
-pause;
-
-% Exercise 5
-fprintf('Exercise 5\n');
-% embedding (onto 2 and 3, as first is constant)
-figure
-plot(evecsn(:,2),evecsn(:,3),'b.-');
-fprintf('Press Enter to continue...\n');
-pause;
-
-% Exercise 6
-fprintf('Exercise 6\n');
-% dirichlet (remove first and last row and column) 
-Ad = A(2:end-1,2:end-1);
-Bd = B(2:end-1,2:end-1);
-% compute efunc evals
-opts.issym = 1;
-N = 2;
-[evecsd, evalsd] = eigs(Ad,Bd,N,'SM',opts);
-% reverse order (smallest first) 
-evalsd = diag(evalsd);
-evalsd = evalsd(end:-1:1)
-evecsd = evecsd(:,end:-1:1);
-% zero for boundary nodes
-evecsd = [zeros(1,size(evecsd,2));evecsd;zeros(1,size(evecsd,2))];
-fprintf('Press Enter to continue...\n');
-pause;
-
-% Exercise 7
-fprintf('Exercise 7\n');
-% embedding (onto 1 and 2) 
-figure;
-plot(evecsd(:,1),evecsd(:,2),'b.-');
-% embedding (onto 3neuman and 2dirichlet) 
-% to create circle
-figure;
-plot(evecsn(:,3),evecsd(:,2),'b.-');
-axis equal;
-fprintf('Press Enter to continue...\n');
-pause;
-
-%% 2D Square Theory
-% Exercise 8
-fprintf('Exercise 8\n');
-% square Dirichlet
-a = 1; 
-x = 0:0.02:a; 
-[X,Y] = meshgrid(x,x); 
-% one dim eigenspace
-Z = sin(1*X*pi./a).*sin(1*Y*pi./a); 
-figure;
-surface(X,Y,zeros(size(X)),Z,'FaceColor','interp','EdgeColor','none','Marker','none'); 
-axis square
-% 2dim eigenspace space
-Z = sin(2*X*pi./a).*sin(1*Y*pi./a); 
-figure;
-surface(X,Y,zeros(size(X)),Z,'FaceColor','interp','EdgeColor','none','Marker','none'); 
-axis square;
-Z = sin(1*X*pi./a).*sin(2*Y*pi./a); 
-figure;
-surface(X,Y,zeros(size(X)),Z,'FaceColor','interp','EdgeColor','none','Marker','none'); 
-axis square;
-% one dim eigenspace
-Z = sin(2*X*pi./a).*sin(2*Y*pi./a); 
-figure;
-surface(X,Y,zeros(size(X)), Z,'FaceColor','interp','EdgeColor','none','Marker','none'); 
-axis square;
-fprintf('Press Enter to continue...\n');
-pause;
+% 
+% %% Linear FEM on line
+% % Exercise 2
+% fprintf('Exercise 2\n');
+% % create spiral
+% phi = 0:0.2:4*pi; 
+% vnum = length(phi); 
+% x = phi.*cos(phi);
+% y = phi.*sin(phi); 
+% figure;
+% plot(x,y,'b.-');
+% % integrals of local form functions
+% a = [1 -1; -1 1];
+% b = [1/3 1/6; 1/6 1/3];
+% fprintf('Press Enter to continue...\n');
+% pause;
+% 
+% % Exercise 3
+% fprintf('Exercise 3\n');
+% % allocate sparse (filled with zero) 
+% A = spalloc(vnum,vnum,2*vnum); 
+% B = spalloc(vnum,vnum,2*vnum); 
+% for i = 2:vnum
+%     % global index of first and second vertex of this edge:
+%     i1 = i-1; 
+%     i2 = i;
+%     % length of segment
+%     W = sqrt((x(i2)-x(i1))^2+(y(i2)-y(i1))^2);
+%     % fill local stuff into global A matrix
+%     A(i1,i1) = A(i1,i1)+a(1,1)/W;
+%     A(i1,i2) = A(i1,i2)+a(1,2)/W;
+%     % same as line before: symmetric
+%     A(i2,i1) = A(i2,i1)+a(2,1)/W;
+%     A(i2,i2) = A(i2,i2)+a(2,2)/W;
+%     % or simply
+%     % A([i1,i2],[i1,i2]) = A([i1,i2],[i1,i2]) + (1.0/W) * a;
+%     B([i1,i2],[i1,i2]) = B([i1,i2],[i1,i2])+W*b;
+% end
+% fprintf('Press Enter to continue...\n');
+% pause;
+% 
+% % Exercise 4
+% fprintf('Exercise 4\n');
+% % compute efunc evals:
+% opts.issym = 1;
+% N = 3; % need the first 2 non zero 
+% [evecsn, evalsn] = eigs(A,B,N,'SM',opts);
+% % reverse order (smallest first)
+% evalsn = diag(evalsn);
+% evalsn = evalsn(end:-1:1)
+% evecsn = evecsn(:,end:-1:1);
+% % plot first non-zero efunc as color
+% figure;
+% surface([x(:) x(:)],[y(:) y(:)],[zeros(length(x),2)],[evecsn(:,2) evecsn(:,2)],...
+%     'FaceColor','none','EdgeColor','flat','Marker','none','LineWidth',2);
+% fprintf('Press Enter to continue...\n');
+% pause;
+% 
+% % Exercise 5
+% fprintf('Exercise 5\n');
+% % embedding (onto 2 and 3, as first is constant)
+% figure
+% plot(evecsn(:,2),evecsn(:,3),'b.-');
+% fprintf('Press Enter to continue...\n');
+% pause;
+% 
+% % Exercise 6
+% fprintf('Exercise 6\n');
+% % dirichlet (remove first and last row and column) 
+% Ad = A(2:end-1,2:end-1);
+% Bd = B(2:end-1,2:end-1);
+% % compute efunc evals
+% opts.issym = 1;
+% N = 2;
+% [evecsd, evalsd] = eigs(Ad,Bd,N,'SM',opts);
+% % reverse order (smallest first) 
+% evalsd = diag(evalsd);
+% evalsd = evalsd(end:-1:1)
+% evecsd = evecsd(:,end:-1:1);
+% % zero for boundary nodes
+% evecsd = [zeros(1,size(evecsd,2));evecsd;zeros(1,size(evecsd,2))];
+% fprintf('Press Enter to continue...\n');
+% pause;
+% 
+% % Exercise 7
+% fprintf('Exercise 7\n');
+% % embedding (onto 1 and 2) 
+% figure;
+% plot(evecsd(:,1),evecsd(:,2),'b.-');
+% % embedding (onto 3neuman and 2dirichlet) 
+% % to create circle
+% figure;
+% plot(evecsn(:,3),evecsd(:,2),'b.-');
+% axis equal;
+% fprintf('Press Enter to continue...\n');
+% pause;
+% 
+% %% 2D Square Theory
+% % Exercise 8
+% fprintf('Exercise 8\n');
+% % square Dirichlet
+% a = 1; 
+% x = 0:0.02:a; 
+% [X,Y] = meshgrid(x,x); 
+% % one dim eigenspace
+% Z = sin(1*X*pi./a).*sin(1*Y*pi./a); 
+% figure;
+% surface(X,Y,zeros(size(X)),Z,'FaceColor','interp','EdgeColor','none','Marker','none'); 
+% axis square
+% % 2dim eigenspace space
+% Z = sin(2*X*pi./a).*sin(1*Y*pi./a); 
+% figure;
+% surface(X,Y,zeros(size(X)),Z,'FaceColor','interp','EdgeColor','none','Marker','none'); 
+% axis square;
+% Z = sin(1*X*pi./a).*sin(2*Y*pi./a); 
+% figure;
+% surface(X,Y,zeros(size(X)),Z,'FaceColor','interp','EdgeColor','none','Marker','none'); 
+% axis square;
+% % one dim eigenspace
+% Z = sin(2*X*pi./a).*sin(2*Y*pi./a); 
+% figure;
+% surface(X,Y,zeros(size(X)), Z,'FaceColor','interp','EdgeColor','none','Marker','none'); 
+% axis square;
+% fprintf('Press Enter to continue...\n');
+% pause;
 
 %% Meshes
 % Exercise 9
